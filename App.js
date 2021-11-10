@@ -29,7 +29,7 @@ export default function App() {
     if (snapshotUnsubscribe) {
       snapshotUnsubscribe();
     }
-    const q = query(collection(db, 'messageBoard'));
+    const q = query(collection(db, 'messageBoard'), where('board', '==', board));
     snapshotUnsubscribe = onSnapshot(q, (qSnap) => {
       let newMessages = [];
       qSnap.docs.forEach((docSnap)=>{
@@ -44,7 +44,7 @@ export default function App() {
 
   useEffect(()=>{ 
     subscribeToSnapshot();
-  }, []);
+  }, [board]);
 
   return (
     <View style={styles.container}>
@@ -72,6 +72,7 @@ export default function App() {
                 author: authorText,
                 text: inputText,
                 timestamp: new Date(),
+                board: board,
             };
             addDoc(collection(db, "messageBoard"), newMsg);
             setInputText('');
